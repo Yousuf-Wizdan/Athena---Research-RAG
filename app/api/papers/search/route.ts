@@ -145,6 +145,21 @@ export async function DELETE(req: Request) {
       url: process.env.QDRANT_URL,
       apiKey: process.env.QDRANT_API_KEY !== "your_qdrant_api_key_here" ? process.env.QDRANT_API_KEY : undefined,
     });
+
+    // Ensure payload indexes exist before querying filters on this collection
+    try {
+      await qdrantClient.createPayloadIndex(COLLECTION_NAME, {
+        field_name: "metadata.paperId",
+        field_schema: "keyword",
+      });
+      await qdrantClient.createPayloadIndex(COLLECTION_NAME, {
+        field_name: "metadata.userId",
+        field_schema: "keyword",
+      });
+    } catch (indexErr) {
+      console.warn("Payload index creation skipped or failed:", indexErr);
+    }
+
     await qdrantClient.delete(COLLECTION_NAME, {
       filter: {
         must: [{ key: "metadata.paperId", match: { value: paperId } }],
