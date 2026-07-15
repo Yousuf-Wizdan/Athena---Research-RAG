@@ -1,7 +1,7 @@
 ﻿<div align="center">
 
 # ⚡ ATHENA RAG
-### *Production-Grade RAG Research Intelligence Platform*
+### *RAG Research Intelligence Platform*
 
 <br/>
 
