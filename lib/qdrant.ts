@@ -2,9 +2,52 @@ import { QdrantVectorStore } from "@langchain/qdrant";
 import { MistralAIEmbeddings } from "@langchain/mistralai";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { getProviderConfig } from "@/lib/env-config";
-import { QdrantClient } from "@qdrant/js-client-rest";
 
 export const COLLECTION_NAME = "research_papers";
+
+/**
+ * Creates keyword payload indexes on metadata.paperId and metadata.userId
+ * using the Qdrant REST API directly. HTTP 409 (already exists) is treated
+ * as success — only genuine failures throw.
+ */
+export async function ensureQdrantIndexes(): Promise<void> {
+  const qdrantUrl = process.env.QDRANT_URL;
+  const apiKey = process.env.QDRANT_API_KEY;
+
+  if (!qdrantUrl) return;
+
+  const cleanApiKey =
+    apiKey && apiKey !== "your_qdrant_api_key_here" ? apiKey : undefined;
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (cleanApiKey) headers["api-key"] = cleanApiKey;
+
+  const createIndex = async (fieldName: string) => {
+    const res = await fetch(
+      `${qdrantUrl}/collections/${COLLECTION_NAME}/index`,
+      {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({
+          field_name: fieldName,
+          field_schema: "keyword",
+        }),
+      }
+    );
+    // 200 = created, 409 = already exists — both are fine
+    if (!res.ok && res.status !== 409) {
+      const body = await res.text();
+      throw new Error(
+        `Qdrant index creation failed for '${fieldName}': ${res.status} ${body}`
+      );
+    }
+  };
+
+  await createIndex("metadata.paperId");
+  await createIndex("metadata.userId");
+}
 
 function getEmbeddings() {
   const config = getProviderConfig();
@@ -24,6 +67,7 @@ function getEmbeddings() {
 
 /**
  * Returns a LangChain QdrantVectorStore connected to the research_papers collection.
+ * Also ensures payload indexes exist before returning.
  */
 export async function getVectorStore(): Promise<QdrantVectorStore> {
   const url = process.env.QDRANT_URL;
@@ -35,29 +79,11 @@ export async function getVectorStore(): Promise<QdrantVectorStore> {
 
   const cleanApiKey = apiKey && apiKey !== "your_qdrant_api_key_here" ? apiKey : undefined;
 
-  // Ensure payload indexes exist for multi-tenant and document scope queries
+  // Ensure payload indexes exist (idempotent — 409 treated as success)
   try {
-    const qdrantClient = new QdrantClient({
-      url,
-      apiKey: cleanApiKey,
-    });
-    
-    // Check if the collection exists, otherwise it will create it
-    const collections = await qdrantClient.getCollections();
-    const exists = collections.collections.some((c) => c.name === COLLECTION_NAME);
-    
-    if (exists) {
-      await qdrantClient.createPayloadIndex(COLLECTION_NAME, {
-        field_name: "metadata.userId",
-        field_schema: "keyword",
-      });
-      await qdrantClient.createPayloadIndex(COLLECTION_NAME, {
-        field_name: "metadata.paperId",
-        field_schema: "keyword",
-      });
-    }
+    await ensureQdrantIndexes();
   } catch (err) {
-    console.error("Failed to ensure payload indexes in Qdrant:", err);
+    console.error("ensureQdrantIndexes failed:", err);
   }
 
   return QdrantVectorStore.fromExistingCollection(getEmbeddings(), {
