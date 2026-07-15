@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String    // Salted password hash
+  name      String
+  papers    Paper[]
+  threads   Thread[]
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Paper {
+  id            String   @id @default(uuid())
+  title         String
+  authors       String
+  abstract      String
+  publishedYear Int
+  pdfUrl        String?
+  userId        String?  // Optional linked user for legacy papers
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
+model Thread {
+  id        String    @id @default(uuid())
+  title     String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  threadId  String
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  role      String   // "user" | "assistant"
+  content   String
+  sources   Json?    // Cached sources details
+  createdAt DateTime @default(now())
+}
