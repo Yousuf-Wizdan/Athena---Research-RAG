@@ -1,0 +1,11 @@
+- Prefers `pnpm` as the package manager (over npm or yarn). Confidence: 0.9
+- Prefers CSS custom properties (variables) over raw hex values or Tailwind arbitrary values for theming. Uses semantic tokens like `bg-background`, `text-foreground`, `border-border`. Confidence: 0.85
+- Prefers `lucide-react` for icons — replaces hand-rolled inline SVGs with the library's components. Confidence: 0.9
+- Prefers `min-h-[100dvh]` over `h-screen` for full-height containers to avoid iOS Safari viewport overflow bugs. Confidence: 0.85
+- Prefers `next-themes` for theme management with `defaultTheme="system"`, `enableSystem`, `attribute="class"`, and `suppressHydrationWarning` on `<html>`. Includes a mounted guard in the toggle to prevent hydration mismatch. Confidence: 0.8
+- Prefers sonner (`sonner`) for toast notifications — uses `toast.loading` / `toast.success` / `toast.error` with message IDs for async operation feedback. Confidence: 0.85
+- Prefers shadcn/ui (New York style) + Tailwind v4 as the design system foundation. Confidence: 0.9
+- Prefers structured error handling: thrown errors carry `{ message, isExpected: boolean, status }` — expected errors use `console.warn`, unexpected use `console.error`. Confidence: 0.8
+- Prefers a `@media (prefers-reduced-motion: reduce)` block that disables all custom CSS animations for accessibility. Confidence: 0.8
+- Does NOT want "Co-authored-by: CommandCodeBot" (or any bot co-author trailers) in git commits. Regular, clean commits only. Confidence: 0.9
+- Prefers a "preview first, push later" workflow — wants to see local previews/renders of changes before they are committed and pushed to the remote. Will explicitly say "do not push anything" when they want review-only mode. Confidence: 0.85
