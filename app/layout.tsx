@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 
 const fraunces = Fraunces({
@@ -65,12 +66,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${fraunces.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {children}
-        <Toaster />
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

@@ -159,6 +159,15 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-shimmer,
+  .animate-candle-glow,
+  .animate-amber-glow {
+    animation: none;
+  }
+}
+
 @keyframes candle-glow {
   0%, 100% { box-shadow: 0 0 0 0 #D4783C / 0.4; }
   50% { box-shadow: 0 0 0 6px #D4783C / 0; }

@@ -1,0 +1,17 @@
+export const loadingMessages = [
+  "Scanning the stacks",
+  "Consulting the archives",
+  "Turning the pages",
+  "Cross-referencing sources",
+  "Tracing citations",
+  "Sifting through findings",
+  "Collating evidence",
+  "Reading between the lines",
+  "Following the thread",
+  "Connecting the references",
+  "Weighing the evidence",
+  "Checking the footnotes",
+  "Building the synthesis",
+  "Reviewing the literature",
+  "Composing the analysis",
+];

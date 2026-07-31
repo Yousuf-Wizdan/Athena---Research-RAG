@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2, X } from "lucide-react";
 
 interface SynthesisPortalProps {
   selectedPaperIds: string[];
@@ -77,7 +78,7 @@ export default function SynthesisPortal({ selectedPaperIds }: SynthesisPortalPro
     );
 
     if (tableLines.length === 0) {
-      return <pre className="text-xs text-[#9F907E] font-mono whitespace-pre-wrap">{md}</pre>;
+      return <pre className="text-xs text-muted-foreground font-mono whitespace-pre-wrap">{md}</pre>;
     }
 
     const parseRow = (line: string) =>
@@ -90,25 +91,25 @@ export default function SynthesisPortal({ selectedPaperIds }: SynthesisPortalPro
     const rows = tableLines.slice(1).map(parseRow);
 
     return (
-      <div className="overflow-x-auto border border-[#36302A] rounded-xl bg-[#141210]/40">
+      <div className="overflow-x-auto border border-border rounded-xl bg-background/40">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[#36302A] bg-[#1E1B18]">
+            <tr className="border-b border-border bg-card">
               {headers.map((h, i) => (
-                <th key={i} className="px-4 py-3 font-semibold text-[#E6DCC3] tracking-wider">
+                <th key={i} className="px-4 py-3 font-semibold text-foreground tracking-wider">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#36302A]/50">
+          <tbody className="divide-y divide-border/50">
             {rows.map((row, rIdx) => (
-              <tr key={rIdx} className="hover:bg-[#D4783C]/[0.02] transition-colors">
+              <tr key={rIdx} className="hover:bg-primary/[0.02] transition-colors">
                 {row.map((cell, cIdx) => (
                   <td
                     key={cIdx}
-                    className={`px-4 py-3 text-[#9F907E] leading-relaxed ${
-                      cIdx === 0 ? "font-semibold text-[#E6DCC3]" : ""
+                    className={`px-4 py-3 text-muted-foreground leading-relaxed ${
+                      cIdx === 0 ? "font-semibold text-foreground" : ""
                     }`}
                   >
                     {cell}
@@ -129,8 +130,8 @@ export default function SynthesisPortal({ selectedPaperIds }: SynthesisPortalPro
       <button
         onClick={handleGenerate}
         disabled={disabled}
-        className={`w-full py-2 bg-[#D4783C]/10 border border-[#D4783C]/30 text-[#D4783C] text-[10px] font-bold rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
-          !disabled ? "hover:bg-[#D4783C]/15 hover:border-[#D4783C]/50 shadow-sm shadow-[#D4783C]/10 active:scale-[0.98]" : ""
+        className={`w-full py-2 bg-primary/10 border border-primary/30 text-primary text-[10px] font-bold rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+          !disabled ? "hover:bg-primary/15 hover:border-primary/50 shadow-sm shadow-primary/10 active:scale-[0.98]" : ""
         }`}
         title={disabled ? "Select 2 or more papers to generate a synthesis matrix" : "Compare selected papers"}
       >
@@ -138,56 +139,53 @@ export default function SynthesisPortal({ selectedPaperIds }: SynthesisPortalPro
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-[#141210]/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in">
-          <div className="w-full max-w-5xl bg-[#1A1714] border border-[#36302A] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
-            <div className="px-6 py-4 border-b border-[#36302A] bg-[#141210]/60 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#E6DCC3] flex items-center gap-2">
-                <span className="font-display text-[#B8943C]">Ω</span>
+        <div className="fixed inset-0 bg-background/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in">
+          <div className="w-full max-w-5xl bg-card border border-border rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+            <div className="px-6 py-4 border-b border-border bg-background/60 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <span className="font-display text-gold">Ω</span>
                 <span>Literature Synthesis Matrix</span>
-                <span className="text-[10px] text-[#D4783C] font-medium px-2 py-0.5 bg-[#D4783C]/10 rounded-full border border-[#D4783C]/25">
+                <span className="text-[10px] text-primary font-medium px-2 py-0.5 bg-primary/10 rounded-full border border-primary/25">
                   AI Synthesized
                 </span>
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-xs text-[#9F907E] hover:text-[#E6DCC3] font-bold px-2 py-1 rounded-lg hover:bg-[#D4783C]/5 transition-colors cursor-pointer"
+                className="text-xs text-muted-foreground hover:text-foreground font-bold px-2 py-1 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer"
               >
                 Close
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto flex-1 bg-[#141210]/40">
+            <div className="p-6 overflow-y-auto flex-1 bg-background/40">
               {loading ? (
                 <div className="py-20 flex flex-col items-center justify-center space-y-4">
                   <div className="relative w-12 h-12">
-                    <div className="absolute inset-0 bg-[#D4783C]/15 rounded-full animate-ping"></div>
-                    <div className="relative flex items-center justify-center w-12 h-12 bg-[#D4783C]/10 rounded-full border border-[#D4783C]/25">
-                      <svg className="animate-spin h-5 w-5 text-[#D4783C]" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                    <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping" />
+                    <div className="relative flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full border border-primary/25">
+                      <Loader2 className="animate-spin h-5 w-5 text-primary" />
                     </div>
                   </div>
                   <div className="text-center space-y-1.5">
-                    <span className="text-xs font-semibold text-[#E6DCC3] block">Synthesizing Comparative Matrix</span>
-                    <span className="text-[10px] text-[#9F907E] block animate-amber-glow">{loadingStep}</span>
+                    <span className="text-xs font-semibold text-foreground block">Synthesizing Comparative Matrix</span>
+                    <span className="text-[10px] text-muted-foreground block animate-amber-glow">{loadingStep}</span>
                   </div>
                 </div>
               ) : error ? (
                 <div className="py-12 text-center space-y-4">
-                  <div className="bg-[#B84747]/10 border border-[#B84747]/20 text-[#B84747] rounded-xl p-4 text-xs max-w-md mx-auto">
+                  <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-xl p-4 text-xs max-w-md mx-auto">
                     {error}
                   </div>
                   <button
                     onClick={handleGenerate}
-                    className="px-4 py-2 bg-[#1E1B18] hover:bg-[#282420] text-[#9F907E] text-xs font-medium rounded-lg transition-colors cursor-pointer"
+                    className="px-4 py-2 bg-card hover:bg-muted text-muted-foreground text-xs font-medium rounded-lg transition-colors cursor-pointer"
                   >
                     Retry Generation
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4 animate-fade-in">
-                  <div className="text-[10px] text-[#9F907E] leading-relaxed max-w-3xl">
+                  <div className="text-[10px] text-muted-foreground leading-relaxed max-w-3xl">
                     Below is the comparative matrix synthesizing core objectives, datasets, methods, findings, and limitations from the selected documents.
                   </div>
                   {renderTable(matrix)}
@@ -195,10 +193,10 @@ export default function SynthesisPortal({ selectedPaperIds }: SynthesisPortalPro
               )}
             </div>
 
-            <div className="px-6 py-3.5 border-t border-[#36302A] bg-[#141210]/40 text-right">
+            <div className="px-6 py-3.5 border-t border-border bg-background/40 text-right">
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-1.5 bg-[#1E1B18] border border-[#36302A] hover:bg-[#282420] text-[#9F907E] text-xs font-medium rounded-xl transition-all cursor-pointer"
+                className="px-4 py-1.5 bg-card border border-border hover:bg-muted text-muted-foreground text-xs font-medium rounded-xl transition-all cursor-pointer"
               >
                 Dismiss
               </button>

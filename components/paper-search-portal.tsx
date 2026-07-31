@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ConfirmationModal from "./confirmation-modal";
 import { toast } from "sonner";
+import { BookOpen, Check, Loader2 } from "lucide-react";
 
 interface Paper {
   id: string;
@@ -182,7 +183,7 @@ export default function PaperSearchPortal({
                 </option>
               ))}
             </select>
-            <span className="text-muted-foreground/50 text-[10px]">&ndash;</span>
+            <span className="text-muted-foreground/50 text-[10px]">-</span>
             <select
               value={yearEnd}
               onChange={(e) => setYearEnd(Number(e.target.value))}
@@ -200,21 +201,13 @@ export default function PaperSearchPortal({
 
       {isLoading ? (
         <div className="py-16 text-center space-y-3">
-          <svg className="animate-spin h-5 w-5 text-primary mx-auto" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-          </svg>
+          <Loader2 className="animate-spin h-5 w-5 text-primary mx-auto" />
           <span className="text-xs text-muted-foreground">Searching corpus...</span>
         </div>
       ) : papers.length === 0 ? (
         <div className="border border-border bg-muted/10 rounded-xl p-10 text-center space-y-2">
           <div className="w-10 h-10 rounded-lg bg-muted/30 mx-auto flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground">
-              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-              <path d="M16 2v4" />
-              <path d="M12 2v4" />
-              <path d="M8 2v4" />
-            </svg>
+            <BookOpen className="w-[18px] h-[18px] text-muted-foreground" />
           </div>
           <h4 className="text-sm font-medium text-foreground">No papers found</h4>
           <p className="text-xs text-muted-foreground max-w-xs mx-auto">
@@ -236,7 +229,7 @@ export default function PaperSearchPortal({
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-0.5 min-w-0">
                       <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-wider block">
-                        {paper.publishedYear} &middot; {paper.authors}
+                        {paper.publishedYear} - {paper.authors}
                       </span>
                       <h4 className="text-sm font-semibold text-foreground leading-snug">{paper.title}</h4>
                     </div>
@@ -248,13 +241,13 @@ export default function PaperSearchPortal({
                   </div>
 
                   <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                    &ldquo;{paper.abstract}&rdquo;
+                    {paper.abstract}
                   </p>
 
                   {paper.snippets && paper.snippets.length > 0 && (
                     <div className="bg-muted/30 border border-border rounded-lg p-2.5 text-[10px] text-muted-foreground/80 leading-relaxed font-mono">
                       <span className="text-[8px] text-primary font-medium uppercase tracking-wider block mb-0.5">Match</span>
-                      &ldquo;{paper.snippets[0]}&rdquo;
+                      {paper.snippets[0]}
                     </div>
                   )}
                 </div>
@@ -270,9 +263,7 @@ export default function PaperSearchPortal({
                   >
                     {isSelected ? (
                       <>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
+                        <Check className="w-2.5 h-2.5" />
                         Selected
                       </>
                     ) : (
