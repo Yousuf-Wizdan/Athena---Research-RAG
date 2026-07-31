@@ -2,38 +2,23 @@
   <img src="./assets/readme/hero.svg" width="100%" alt="Athena RAG — Upload research papers, ask questions, get cited AI answers">
 </p>
 
-
-## What It Is
-
-Athena transforms research PDFs into a conversational knowledge base. Upload a paper, ask questions in natural language, and get answers with real source citations — powered by production-grade RAG with vector search and LLM orchestration.
-
-<p align="center">
-  <a href="https://athena-rag-theta.vercel.app" target="_blank">
-    <img src="https://img.shields.io/badge/%E2%9A%A1%20Live%20Demo-athena--rag--theta.vercel.app-D4783C?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo">
-  </a>
-</p>
-
 <br>
 
-## Key Capabilities
+## What It Does
+
+Upload a research PDF. Athena extracts the text, generates metadata via LLM, splits it into overlapping chunks, and embeds each chunk as a 1024-dimension vector. Ask a question in natural language and get a streaming answer with real source citations from your papers.
 
 | | |
 |---|---|
-| **Paper Ingestion** | Upload PDFs → LLM metadata extraction (title, authors, year, abstract) → chunking (1K tokens, 200 overlap) → vector embedding |
-| **Dual-Mode Search** | Semantic (cosine-similarity vector retrieval) + Lexical (Postgres full-text across title/author/abstract) |
-| **Persistent AI Chat** | Streaming responses via Vercel AI SDK, thread history in PostgreSQL, sources cited inline |
-| **Cross-Paper Synthesis** | Retrieve top chunks from multiple papers simultaneously for literature reviews and gap analysis |
-| **Multi-Tenant Auth** | JWT sessions (HttpOnly, Secure), bcrypt hashing, per-user data isolation at the query level |
-| **Dual-Theme Interface** | System-aware light/dark mode with manual toggle, editorial split-screen auth, landing page + protected workspace |
-
-<br>
-
-## How It Works
-
-Upload a PDF. Athena extracts the text, runs an LLM pass to infer metadata, splits the content into overlapping chunks, and embeds each chunk as a 1024-dimension vector stored in Qdrant Cloud. When you ask a question, the system retrieves the most relevant chunks via cosine similarity, filters them to your user scope, and streams a cited answer from Mistral or OpenAI.
+| **Paper Ingestion** | PDF upload → LLM metadata extraction → chunking → vector embedding |
+| **Dual-Mode Search** | Semantic (cosine-similarity vector retrieval) + Lexical (Postgres full-text) |
+| **Persistent Chat** | Streaming responses via Vercel AI SDK, thread history in PostgreSQL, sources cited inline |
+| **Cross-Paper Synthesis** | Compare methodologies, findings, and limitations across multiple papers in one pass |
+| **Multi-Tenant Auth** | JWT sessions (HttpOnly, Secure), bcrypt hashing, per-user data isolation |
+| **Dual-Theme Interface** | System-aware light/dark mode, editorial split-screen auth, public landing page + protected workspace |
 
 <p align="center">
-  <img src="./assets/readme/architecture.svg" width="100%" alt="Athena RAG system architecture diagram showing Browser, Next.js API routes, Neon PostgreSQL, Qdrant Cloud, and Mistral/OpenAI providers">
+  <img src="./assets/readme/architecture.svg" width="100%" alt="Athena RAG system architecture showing Browser, Next.js API, Neon PostgreSQL, Qdrant Cloud, and Mistral/OpenAI providers">
 </p>
 
 <br>
@@ -42,12 +27,12 @@ Upload a PDF. Athena extracts the text, runs an LLM pass to infer metadata, spli
 
 | Route | Access | Description |
 |---|---|---|
-| `/` | Public | Landing page with hero, features, and CTA |
-| `/login` | Public | Auth page with split-screen editorial layout |
-| `/workspace` | Protected | Research dashboard — upload, search, chat, synthesize |
+| `/` | Public | Landing page |
+| `/login` | Public | Auth — split-screen editorial layout |
+| `/workspace` | Protected | Dashboard — upload, search, chat, synthesize |
 | `/api/auth/*` | Public | Register, login, logout, session check |
-| `/api/papers/*` | Protected | Upload, search, chat, cross-paper synthesis |
-| `/api/threads/*` | Protected | CRUD for chat threads and messages |
+| `/api/papers/*` | Protected | Upload, search, chat, synthesis |
+| `/api/threads/*` | Protected | Chat thread and message CRUD |
 
 <br>
 
@@ -71,13 +56,12 @@ Requires Node.js 20+, pnpm 9+, a [Qdrant Cloud](https://cloud.qdrant.io) cluster
 | Layer | Technology |
 |---|---|
 | **Framework** | Next.js 16 (App Router + Turbopack) |
-| **UI** | React 19 + Tailwind CSS v4 + shadcn/ui New York |
-| **Icons** | lucide-react |
-| **Theming** | next-themes (system-aware light/dark mode) |
+| **UI** | React 19 + Tailwind CSS v4 + shadcn/ui New York + lucide-react |
+| **Theming** | next-themes (system-aware light/dark) |
 | **ORM** | Prisma 6 + Neon PostgreSQL |
 | **Vector DB** | Qdrant Cloud (1024-dim cosine, payload keyword filters) |
 | **Embeddings** | Mistral `mistral-embed` / OpenAI `text-embedding-3-large` |
-| **LLM** | Mistral / OpenAI via AI SDK + LangChain |
+| **LLM** | Mistral / OpenAI via Vercel AI SDK + LangChain |
 | **Auth** | JWT + bcrypt (custom, no NextAuth) |
 | **PDF Parsing** | pdf-parse |
 | **Deployment** | Vercel (Production + Preview) |
@@ -116,7 +100,7 @@ Requires Node.js 20+, pnpm 9+, a [Qdrant Cloud](https://cloud.qdrant.io) cluster
     </a>
     &nbsp;
     <a href="https://athena-rag-theta.vercel.app">
-      <img src="https://img.shields.io/badge/%E2%9A%A1%20Try%20Athena%20Live-D4783C?style=flat-square&logo=vercel&logoColor=white" alt="Try Athena Live">
+      <img src="https://img.shields.io/badge/Try%20Athena%20Live-D4783C?style=flat-square&logo=vercel&logoColor=white" alt="Try Athena Live">
     </a>
   </p>
   <br>
