@@ -24,6 +24,7 @@ Athena transforms research PDFs into a conversational knowledge base. Upload a p
 | **Persistent AI Chat** | Streaming responses via Vercel AI SDK, thread history in PostgreSQL, sources cited inline |
 | **Cross-Paper Synthesis** | Retrieve top chunks from multiple papers simultaneously for literature reviews and gap analysis |
 | **Multi-Tenant Auth** | JWT sessions (HttpOnly, Secure), bcrypt hashing, per-user data isolation at the query level |
+| **Dual-Theme Interface** | System-aware light/dark mode with manual toggle, editorial split-screen auth, landing page + protected workspace |
 
 <br>
 
@@ -34,6 +35,19 @@ Upload a PDF. Athena extracts the text, runs an LLM pass to infer metadata, spli
 <p align="center">
   <img src="./assets/readme/architecture.svg" width="100%" alt="Athena RAG system architecture diagram showing Browser, Next.js API routes, Neon PostgreSQL, Qdrant Cloud, and Mistral/OpenAI providers">
 </p>
+
+<br>
+
+## Routes
+
+| Route | Access | Description |
+|---|---|---|
+| `/` | Public | Landing page with hero, features, and CTA |
+| `/login` | Public | Auth page with split-screen editorial layout |
+| `/workspace` | Protected | Research dashboard — upload, search, chat, synthesize |
+| `/api/auth/*` | Public | Register, login, logout, session check |
+| `/api/papers/*` | Protected | Upload, search, chat, cross-paper synthesis |
+| `/api/threads/*` | Protected | CRUD for chat threads and messages |
 
 <br>
 
@@ -58,6 +72,8 @@ Requires Node.js 20+, pnpm 9+, a [Qdrant Cloud](https://cloud.qdrant.io) cluster
 |---|---|
 | **Framework** | Next.js 16 (App Router + Turbopack) |
 | **UI** | React 19 + Tailwind CSS v4 + shadcn/ui New York |
+| **Icons** | lucide-react |
+| **Theming** | next-themes (system-aware light/dark mode) |
 | **ORM** | Prisma 6 + Neon PostgreSQL |
 | **Vector DB** | Qdrant Cloud (1024-dim cosine, payload keyword filters) |
 | **Embeddings** | Mistral `mistral-embed` / OpenAI `text-embedding-3-large` |
@@ -72,10 +88,10 @@ Requires Node.js 20+, pnpm 9+, a [Qdrant Cloud](https://cloud.qdrant.io) cluster
 
 | Operation | P50 Latency |
 |---|---|
-| PDF ingestion (10-page paper) | ~4–8s |
-| Semantic search (top-15 chunks) | ~200–400ms |
-| First chat token (streaming) | ~600–1,200ms |
-| Cross-paper synthesis | ~2–5s |
+| PDF ingestion (10-page paper) | ~4-8s |
+| Semantic search (top-15 chunks) | ~200-400ms |
+| First chat token (streaming) | ~600-1,200ms |
+| Cross-paper synthesis | ~2-5s |
 
 <br>
 
